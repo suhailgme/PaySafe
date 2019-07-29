@@ -68,6 +68,7 @@ contract PaySafe is Ownable {
         bool complete
     )
     {
+        require(_transactionId < transactionId, "Invalid transaction ID");
         Transaction memory currentTransaction = transactions[_transactionId];
         return
         (
