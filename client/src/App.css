@@ -1,6 +1,12 @@
+
 .App {
   text-align: center;
 }
+
+.navbar {
+  border-bottom: 1px rgb(168, 162, 162) solid;
+}
+
 
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
