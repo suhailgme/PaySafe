@@ -14,13 +14,14 @@ This application implements reversible Ethereum transactions. This type of trans
 
 #### Running locally
 ##### Running and Instantiating the PaySafe contract
-* Clone the project locally using git clone (alternatively, download the zip file provided by Github)
+* Clone the project locally using `git clone` (alternatively, download and extract the zip file)
 * Navigate to the PaySafe folder via commmand line(e.g. Powershell or Terminal)
 * Install project dependencies by typing `npm install` in the PaySafe folder
 * In a new command line window, run `ganache-cli` and copy the mnemonic for use in Metamask
   * alternatively, run a Ganache GUI instance
 * In the previous command line window enter the `truffle migrate --network develop` command
   * This will compile and migrate the required contracts to the development blockchain
+  * Tests can be run by typing `truffle test`
 * The PaySafe contract is now compiled and ready to be interacted with
 ##### Running the front-end client
 * In a command line terminal, navigate the the client directory located within the PaySafe folder
