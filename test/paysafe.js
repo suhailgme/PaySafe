@@ -8,16 +8,13 @@ contract("PaySafe", accounts => {
     const secondAccount = accounts[2]
     const thirdAccount = accounts[3]
     const fourthAccount = accounts[4]
+    const zeroAddress = '0x0000000000000000000000000000000000000000'
     const oneEth = 1000000000000000000
     let instance
 
     beforeEach(async () => {
         instance = await PaySafe.new()
     })
-    console.log(`Deployer account: ${deployer}`)
-    console.log(`firstAccount account: ${firstAccount}`)
-    console.log(`secondAccount account: ${secondAccount}`)
-    console.log(`thirdAccount account: ${thirdAccount}`)
 
     // Test the ownable.sol library for appropriate functionality
     describe("Contract Ownership", async () => {
@@ -33,15 +30,45 @@ contract("PaySafe", accounts => {
         })
         // Check that the contract owner can successfully transfer the contract ownership to another address
         it("The Contract owner should be able to transfer ownership", async () => {
-            await instance.transferOwnership(firstAccount)
+            await instance.transferOwnership(secondAccount)
             let newOwner = await instance.owner()
-            assert.equal(firstAccount, newOwner, `${firstAccount} should be owner`)
+            assert.equal(secondAccount, newOwner, `${secondAccount} should be owner`)
+        })
+        // Check that the contract ownership can be renounced (sent to 0x0)
+        it("The Contract owner should be able renounce ownership", async () => {
+            await instance.renounceOwnership()
+            let newOwner = await instance.owner()
+            assert.equal(zeroAddress, newOwner, `${zeroAddress} should be owner`)
         })
     })
 
-    // Tests for the new transaction function of PaySafe.sol
+    // Tests for the circuitBreaker function of PaySafe.sol    
+    describe("Circuit Breaker", async () => {
+        it("Circuit breaker is only accessible by the contract owner", async () => {
+            let owner = await instance.owner()
+            let attacker = secondAccount
+            assert.notEqual(attacker, owner, "Attacker should not be the owner")
+            await catchRevert(instance.circuitBreaker({ from: attacker }))
+        })
+        it("Circuit breaker can be successfully enabled by the contract owner", async () => {
+            let owner = await instance.owner()
+            await instance.circuitBreaker({ from: owner })
+            const paused = await instance.contractPaused()
+            assert.equal(paused, true, "contractPaused should be true")
+        })
+        it("Circuit breaker does not allow new transactions to be created", async () => {
+            let owner = await instance.owner()
+            let sender = secondAccount
+            let recipient = thirdAccount
+            await instance.circuitBreaker({ from: owner })
+            await catchRevert(instance.newTransaction(recipient, "0x0", { from: sender, value: oneEth }))
+        })
+    })
+
+    // Tests for the newTransaction function of PaySafe.sol
     describe("New Transaction", async () => {
-        // Check that a 
+        // Check that a new transaction is successfully created and that the transaction Ids have been incremented
+        // This ensures that transactions are not being overwritten
         it("Creates a new transaction", async () => {
             let firstTransactionId = await instance.newTransaction(secondAccount, "0x0", { from: firstAccount, value: oneEth })
             firstTransactionId = firstTransactionId.logs[0].args.transactionId.toString()
@@ -51,6 +78,8 @@ contract("PaySafe", accounts => {
             assert.equal(secondTransactionId, 1, `transaction ID should be 1`)
 
         })
+        // Check that a transaction object contains the correct details as requested by the sender
+        // This is test of the data integrity of the Transaction object
         it("Has the correct transaction details", async () => {
             let transactionId = await instance.newTransaction(secondAccount, "0x0", { from: firstAccount, value: oneEth })
             transactionId = transactionId.logs[0].args.transactionId.toString()
@@ -59,15 +88,88 @@ contract("PaySafe", accounts => {
             assert.equal(currentTransaction.destination, secondAccount, `destination should be ${secondAccount}`)
             assert.equal(currentTransaction.value.toString(), oneEth, `value should be ${oneEth}`)
         })
+        // Checks that a transaction sent back to the same address does not send.
+        // This is to ensure that the user does not mistakenly send needless transactions
+        it("Does not allow a transaction to be sent to the sender", async () => {
+            let sender = firstAccount
+            await catchRevert(instance.newTransaction(sender, "0x0", { from: sender }))
+        })
+        // Checks to ensure that some value is being sent in each transaction.
+        // This is to ensure that a user does not spend gas on a needless transaction
+        it("Does not allow a transaction to be sent without some value", async () => {
+            let sender = firstAccount
+            let recipient = secondAccount
+            await catchRevert(instance.newTransaction(recipient, "0x0", { from: sender, value:0 }))
+        })
     })
+    // Tests for the withdrawal function of PaySafe.sol
     describe("Withdraw", async () => {
+        // Check that the intended recipient can withdraw funds as requested
         it("Allows the recipient to withdraw funds", async () => {
             let beforeBalance = await web3.eth.getBalance(thirdAccount)
             let transactionId = await instance.newTransaction(thirdAccount, "0x0", { from: firstAccount, value: oneEth })
             transactionId = transactionId.logs[0].args.transactionId.toString()
-            await instance.withdraw(transactionId, {from: thirdAccount})
+            await instance.withdraw(transactionId, { from: thirdAccount })
             let afterBalance = await web3.eth.getBalance(thirdAccount)
-            assert.isAbove(parseInt(afterBalance),parseInt(beforeBalance) , `Balance should be greater than 100ETH`)
+            assert.isAbove(parseInt(afterBalance), parseInt(beforeBalance), `Balance should be greater than 100ETH`)
+        })
+        // Checks that withdrawals are restricted to only the intended recipient
+        // If an address attempts to withdraw the funds but is not the intended recipient, 
+        // the transaction should fail
+        it("Only the intended recipient can withdraw funds", async () => {
+            let sender = firstAccount
+            let recipient = secondAccount
+            let attacker = thirdAccount
+            let transactionId = await instance.newTransaction(recipient, "0x0", { from: sender, value: oneEth })
+            transactionId = transactionId.logs[0].args.transactionId.toString()
+            await catchRevert(instance.withdraw(transactionId, { from: attacker }))
+        })
+        // Checks that a recipient cannot withdraw from a transaction that has been cancelled
+        // by the sender. In this case we expect to see a revert
+        it("A recipient cannot withdraw from a cancelled transaction", async () => {
+            let sender = firstAccount
+            let recipient = secondAccount
+            let transactionId = await instance.newTransaction(recipient, "0x0", { from: sender, value: oneEth })
+            transactionId = transactionId.logs[0].args.transactionId.toString()
+            await instance.cancelTransaction(transactionId, { from: sender })
+            await catchRevert(instance.withdraw(transactionId, { from: recipient }))
+        })
+    })
+    // Tests for the cancelTransaction function of PaySafe.sol
+    describe("Cancel Transaction", async () => {
+        // Check that the sender can successfully cancel a transaction that they have previously sent
+        it("Allows the sender to cancel a transaction", async () => {
+            let sender = firstAccount
+            let recipient = secondAccount
+            let transactionId = await instance.newTransaction(recipient, "0x0", { from: sender, value: oneEth })
+            transactionId = transactionId.logs[0].args.transactionId.toString()
+            let transaction = await instance.getTransaction(transactionId);
+            let beforeTxStatus = transaction.cancelled
+            await instance.cancelTransaction(transactionId, { from: sender })
+            transaction = await instance.getTransaction(transactionId);
+            let afterTxStatus = transaction.cancelled
+            assert.equal(beforeTxStatus, false, "Transactions should not be cancelled by default")
+            assert.equal(afterTxStatus, true, "Transactions should be cancellable by sender")
+        })
+        // Checks to ensure that an address not designated in the transaction object 
+        // as "sender" is not able to cancel a transaction.
+        it("A non-sender address cannot cancel a transaction", async () => {
+            let sender = firstAccount
+            let recipient = secondAccount
+            let attacker = thirdAccount
+            let transactionId = await instance.newTransaction(recipient, "0x0", { from: sender, value: oneEth })
+            transactionId = transactionId.logs[0].args.transactionId.toString()
+            await catchRevert(instance.cancelTransaction(transactionId, { from: attacker }))
+        })
+        // Checks that a transaction that has been cancelled and refunded to the sender cannot
+        // be accepted by the recipient
+        it("An accepted payment cannot be cancelled by the sender", async () => {
+            let sender = firstAccount
+            let recipient = secondAccount
+            let transactionId = await instance.newTransaction(recipient, "0x0", { from: sender, value: oneEth })
+            transactionId = transactionId.logs[0].args.transactionId.toString()
+            await instance.withdraw(transactionId, { from: recipient })
+            await catchRevert(instance.cancelTransaction(transactionId, { from: sender }))
         })
     })
 })
