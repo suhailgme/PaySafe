@@ -4,7 +4,7 @@
 This application implements reversible Ethereum transactions. This type of transaction is useful to ensure that only the intended recipient can access the sent funds. Once a transaction is created, the sender can notify the receiver to visit the application to withdraw the sent Ether. If the sender mistakenly sends Ether to the incorrect address (or the incorrect amount is sent), the sender may cancel the transaction and recieve a refund. Once the recipient has claimed the funds, the transaction is no longer eligible to be cancelled.
 
 ![PaySafe Screenshot](https://github.com/suhailgme/PaySafe/blob/master/screenshots/PaySafe.PNG)
-Built with Rimble❤️
+Built with [Rimble❤️](https://github.com/ConsenSys/rimble-ui)
 ### Usage
 * Access the Dapp on Rinkeby at [netlify address to front end]() 
 * Or [build and run it locally](#notes-to-developers)
