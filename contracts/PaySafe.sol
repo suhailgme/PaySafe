@@ -119,9 +119,10 @@ contract PaySafe is Ownable {
 
     }
     ///@dev Allows the source (sender) to cancel a transaction if it has not yet ben accepted by the destination
+    ///@dev if the circuit breaker has been tripped, only cancelTransaction will remain functional
     ///@notice Cancel a pending transaction with the ID `_transactionId` if you are the sender
     ///@param _transactionId of the transaction to be cancelled
-    function cancelTransaction(uint _transactionId) public checkIfPaused notComplete(_transactionId){
+    function cancelTransaction(uint _transactionId) public notComplete(_transactionId){
         require(msg.sender == transactions[_transactionId].source, "You are not the source");
         Transaction storage currentTransaction = transactions[_transactionId];
         currentTransaction.complete = true;
