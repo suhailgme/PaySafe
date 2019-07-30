@@ -19,15 +19,19 @@ contract("PaySafe", accounts => {
     console.log(`secondAccount account: ${secondAccount}`)
     console.log(`thirdAccount account: ${thirdAccount}`)
 
-
+    // Test the ownable.sol library for appropriate functionality
     describe("Contract Ownership", async () => {
+        // Check that the deployed contract (PaySafe.sol) is owned by the correct, deploying address
         it("Contract owner should be set to deploying address", async () => {
             let owner = await instance.owner()
             assert.equal(deployer, owner, "Deploying address should be owner")
         })
+        // Check that only the owner is able to transfer ownership. All other addresses
+        // that attempt to transfer ownership should have the transaction reverted
         it("Only the Contract owner should be able to transfer ownership", async () => {
             await catchRevert(instance.transferOwnership(firstAccount, { from: secondAccount }))
         })
+        // Check that the contract owner can successfully transfer the contract ownership to another address
         it("The Contract owner should be able to transfer ownership", async () => {
             await instance.transferOwnership(firstAccount)
             let newOwner = await instance.owner()
@@ -35,7 +39,9 @@ contract("PaySafe", accounts => {
         })
     })
 
+    // Tests for the new transaction function of PaySafe.sol
     describe("New Transaction", async () => {
+        // Check that a 
         it("Creates a new transaction", async () => {
             let firstTransactionId = await instance.newTransaction(secondAccount, "0x0", { from: firstAccount, value: oneEth })
             firstTransactionId = firstTransactionId.logs[0].args.transactionId.toString()
