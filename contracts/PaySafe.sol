@@ -1,6 +1,7 @@
 pragma solidity ^0.5.0;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+
 ///@title PaySafe
 ///@author suhailgme
 ///@notice this contract implements reversable transactions
@@ -11,6 +12,7 @@ contract PaySafe is Ownable {
     event LogCancelTransaction(address indexed source, address indexed destination, uint value, uint transactionId);
     mapping (uint => Transaction) public transactions;
     uint transactionId;
+    bool public contractPaused = false;
 
     struct Transaction {
      address payable source;
@@ -18,9 +20,30 @@ contract PaySafe is Ownable {
      uint value;
      bytes data;
      bool complete;
+     bool cancelled;
     }
     // @dev Fallback function allows to deposit ether.
-    function() external payable {}
+    function() external payable { revert("Use newTransaction() to create payments");}
+    
+    /*
+     * Admin functions
+     */
+    /// @dev If the contract is paused, stop the modified function
+    modifier checkIfPaused() {
+        require(contractPaused == false, "Contract has been paused");
+        _;
+    }
+     /// @dev Allows administrator to pause certain functions
+    function circuitBreaker() public onlyOwner {
+        if (contractPaused == false) { contractPaused = true; }
+        else { contractPaused = false; }
+    }
+    
+    /*
+    * Transaction state modifier
+    */
+    
+    modifier notComplete(uint _transactionId){require(transactions[_transactionId].complete == false, "Transaction is already complete");_;}
 
     /*
      * Public functions
@@ -35,6 +58,7 @@ contract PaySafe is Ownable {
     )
         public
         payable
+        checkIfPaused
         returns (uint _transactionId)
     {
         require(msg.value > 0, "Insufficient funds sent");
@@ -44,7 +68,8 @@ contract PaySafe is Ownable {
             destination: _destination,
             value: msg.value,
             data: _data,
-            complete: false
+            complete: false,
+            cancelled: false
         });
         _transactionId = transactionId;
         transactionId +=1;
@@ -65,7 +90,8 @@ contract PaySafe is Ownable {
         address destination,
         uint value,
         bytes memory data,
-        bool complete
+        bool complete,
+        bool cancelled
     )
     {
         require(_transactionId < transactionId, "Invalid transaction ID");
@@ -76,17 +102,18 @@ contract PaySafe is Ownable {
             currentTransaction.destination,
             currentTransaction.value,
             currentTransaction.data,
-            currentTransaction.complete
+            currentTransaction.complete,
+            currentTransaction.cancelled
         );
     }
     ///@dev Allows withdrawl of funds by the destination (recipient) address only
     ///@notice Withdraw the funds sent to the destination address from transaction `_transactionId`
     ///@param _transactionId of the transaction to withdraw funds from
-    function withdraw(uint _transactionId) public{
+    function withdraw(uint _transactionId) public checkIfPaused notComplete(_transactionId){
         require(msg.sender == transactions[_transactionId].destination, "You are not the intended recipient");
-        require(transactions[_transactionId].complete == false, "Transaction is already complete");
         Transaction storage currentTransaction = transactions[_transactionId];
         currentTransaction.complete = true;
+        currentTransaction.cancelled = false;
         currentTransaction.destination.transfer(currentTransaction.value);
         emit LogWithdrawal(currentTransaction.destination, currentTransaction.value, _transactionId);
 
@@ -94,11 +121,11 @@ contract PaySafe is Ownable {
     ///@dev Allows the source (sender) to cancel a transaction if it has not yet ben accepted by the destination
     ///@notice Cancel a pending transaction with the ID `_transactionId` if you are the sender
     ///@param _transactionId of the transaction to be cancelled
-    function cancelTransaction(uint _transactionId) public{
+    function cancelTransaction(uint _transactionId) public checkIfPaused notComplete(_transactionId){
         require(msg.sender == transactions[_transactionId].source, "You are not the source");
-        require(transactions[_transactionId].complete == false, "Transaction is already complete");
         Transaction storage currentTransaction = transactions[_transactionId];
         currentTransaction.complete = true;
+        currentTransaction.cancelled = true;
         currentTransaction.source.transfer(currentTransaction.value);
         emit LogCancelTransaction(currentTransaction.source, currentTransaction.destination, currentTransaction.value, _transactionId);
     }
