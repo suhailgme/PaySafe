@@ -1,7 +1,7 @@
 # PaySafe
 
 ### Description
-This application implements reversible Ethereum transactions. This type of transaction is useful to ensure that only the intended recipient can access the sent funds. Once a transaction is created, the sender can notify the receiver to visit the application to withdraw the sent Ether. If the sender mistakenly sends Ether to the incorrect address (or the incorrect amount is sent), the intended recipient can inform the sender and the transaction can be cancelled. Once the recipient has claimed the funds, the transaction is no longer eligible to be cancelled.
+This application implements reversible Ethereum transactions. This type of transaction is useful to ensure that only the intended recipient can access the sent funds. Once a transaction is created, the sender can notify the receiver to visit the application to withdraw the sent Ether. If the sender mistakenly sends Ether to the incorrect address (or the incorrect amount is sent), the sender may cancel the transaction and recieve a refund. Once the recipient has claimed the funds, the transaction is no longer eligible to be cancelled.
 
 ### Notes to Developers
 #### Prerequisites
@@ -22,7 +22,7 @@ This application implements reversible Ethereum transactions. This type of trans
 * In the previous command line window enter the `truffle migrate --network develop` command
   * This will compile and migrate the required contracts to the development blockchain
 * The PaySafe contract is now compiled and ready to be interacted with
-#### Running the front-end client
+##### Running the front-end client
 * In a command line terminal, navigate the the client directory located within the PaySafe folder
 * Run the command `npm install` to download the required dependencies
 * Once installation has completed, run the command `npm run start`
