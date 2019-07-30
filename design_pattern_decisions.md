@@ -2,7 +2,7 @@
 
 ### Restricted Access
 * Only the owner of the contract may transfer ownership
-* Only the source and recipient of the destination may cancel or claim the funds
+* Only the source and recipient of the transaction may cancel or claim the funds
 
 ### Circuit Breaker
 * If a bug is discovered, a circuit breaker is used by the contract owner to prevent the creation of new transactions
