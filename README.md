@@ -7,8 +7,25 @@ This application implements reversible Ethereum transactions. This type of trans
 Built with Rimble❤️
 ### Usage
 * Access the Dapp on Rinkeby at [netlify address to front end]() 
-* Or [build it and run it locally](#notes-to-developers)
+* Or [build and run it locally](#notes-to-developers)
 
+#### Create a New ETH Payment
+* Enter an address you wish to send funds to
+* Input the amount of Ether to send to the specified address
+* Optionally include any comments you'd like the recipient to see
+* Hit the send button and accept the transaction on your wallet (e.g. Metamask)
+
+#### Cancel a Payment
+* Cancel a pending payment by clicking the red "Cancel" button
+* Payments can only be cancelled if they have not been claimed by the recipient
+* Once a payment has been cancelled, it is marked as cancelled
+
+#### Accept a payment
+* A payment can be claimed if it is pending by clicking on the green "Claim" button
+* Once a payment has been claimed, it is marked as complete
+
+#### General
+* Account balances, payment history, and payment status are updated on the fly as transactions are sent by the user
 
 ### Notes to Developers
 #### Prerequisites
