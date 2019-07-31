@@ -1,0 +1,25 @@
+{
+  "name": "paysafe",
+  "version": "1.0.0",
+  "description": "Reversible ethereum transactions",
+  "main": "App.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/suhailgme/PaySafe.git"
+  },
+  "author": "suhailgme",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/suhailgme/PaySafe/issues"
+  },
+  "homepage": "https://github.com/suhailgme/PaySafe#readme",
+  "dependencies": {
+    "openzeppelin-solidity": "^2.3.0"
+  }
+}

@@ -1,3 +1,6 @@
+.DS_STORE
+node_modules
+.vscode
 *.mp4
 .secret
 youtube.txt
