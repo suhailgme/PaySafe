@@ -6,7 +6,7 @@ This application implements reversible Ethereum transactions. This type of trans
 ![PaySafe Screenshot](https://github.com/suhailgme/PaySafe/blob/master/screenshots/PaySafe.PNG)
 Built with [Rimble❤️](https://github.com/ConsenSys/rimble-ui)
 ### Usage
-* Access the Dapp on Rinkeby at [netlify address to front end]() 
+* Access the Dapp on Rinkeby at (https://dreamy-hypatia-20bc93.netlify.com/) 
 * Or [build and run it locally](#notes-to-developers)
 
 #### Create a New ETH Payment
@@ -36,8 +36,8 @@ Built with [Rimble❤️](https://github.com/ConsenSys/rimble-ui)
 * Ganache CLI or GUI
 * Metamask
 
-#### Running locally
-##### Running and Instantiating the PaySafe contract
+#### Building and Running PaySafe Locally
+##### Compiling and Instantiating the PaySafe contract
 * Clone the project locally using `git clone` (alternatively, download and extract the zip file)
 * Navigate to the PaySafe folder via commmand line(e.g. Powershell or Terminal)
 * Install project dependencies by typing `npm install` in the PaySafe folder
@@ -47,7 +47,8 @@ Built with [Rimble❤️](https://github.com/ConsenSys/rimble-ui)
   * This will compile and migrate the required contracts to the development blockchain
   * Tests can be run by typing `truffle test`
 * The PaySafe contract is now compiled and ready to be interacted with
-##### Running the front-end client
+##### Building the front-end client (Optional)
+* ##### Optionally skip building the client and navigate to https://dreamy-hypatia-20bc93.netlify.com/ using Metamask on localhost:8545 with Ganache running to interact with the locally deployed instance of PaySafe
 * In a command line terminal, navigate the the client directory located within the PaySafe folder
 * Run the command `npm install` to download the required dependencies
 * Once installation has completed, run the command `npm run start`
