@@ -14,7 +14,7 @@ export default class AccountInfo extends Component {
   render() {
     const {account, balance} = this.props
     return (
-      <Card width={'500px'} height={'465px'} mx={'auto'}>
+      <Card width={window.innerWidth < 768 ? '400px' : '500px'} height={'465px'} mx={'auto'}>
         <Flex bg='blue'>
           <Box pt={5} pl={4} width={1 / 2}>
             <Text p={0} fontWeight={4} fontSize={2} color='white'>Account Blockie</Text>

@@ -61,8 +61,8 @@ class App extends Component {
       return (
         <div className="App">
           <NavBar networkId={networkId} />
-          <Flex style={{ paddingTop: '50px' }} flexWrap='wrap'>
-            <Box width={[1, 1, 0.5]} >
+          <Flex pt={2} flexWrap='wrap' justifyContent='center'>
+            <Box pt={4} px={4}>
               <NewPayment
                 account={accounts[0]}
                 web3={this.state.web3}
@@ -71,7 +71,7 @@ class App extends Component {
                 updateBalance={this.updateBalance}
               />
             </Box>
-            <Box width={[1, 1, 0.5]} >
+            <Box pt={4} px={4}> 
               <AccountInfo account={accounts[0]} balance={balance} />
             </Box>
           </Flex>

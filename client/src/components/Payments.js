@@ -55,11 +55,10 @@ export default class Payments extends Component {
     const transaction = transactions.find(transaction => {
        return transaction.paymentId === transactionId.toString()
     })
-    let tx
     if(transaction.to === account)
-      tx = await contract.methods.withdraw(transactionId).send({ from: account })
+      await contract.methods.withdraw(transactionId).send({ from: account })
     if(transaction.from === account)
-      tx = await contract.methods.cancelTransaction(transactionId).send({ from: account })
+      await contract.methods.cancelTransaction(transactionId).send({ from: account })
     this.state.updateBalance()
     // console.log(tx)
     await this.getEvents();
@@ -68,7 +67,7 @@ export default class Payments extends Component {
   render() {
     const transactions = this.state.transactions
     return (
-      <Card width={'1100px'} mx={'auto'}>
+      <Card width={'1065px'} mx={'auto'}>
         <Text
           caps
           fontSize={1}
@@ -96,9 +95,9 @@ export default class Payments extends Component {
             <tbody key={index}>
               <tr>
                 <td >{transaction.paymentId}</td>
-                <td><a target='_blank' href={`https://etherscan.io/address/${transaction.to}`}><EthAddress address={transaction.to} truncate={true} /></a></td>
-                <td><EthAddress address={transaction.from} truncate={true} /></td>
-                <td><Text fontWeight={0} color={this.state.account === transaction.to ? 'green' : 'red'}>{this.state.account == transaction.to ? 'Incoming' : 'Outgoing'}</Text></td>
+                <td><a target='_blank' href={`https://rinkeby.etherscan.io/address//${transaction.to}`}><EthAddress address={transaction.to} truncate={true} /></a></td>
+                <td><a target='_blank' href={`https://rinkeby.etherscan.io/address//${transaction.from}`}><EthAddress address={transaction.from} truncate={true} /></a></td>
+                <td><Text fontWeight={0} color={this.state.account === transaction.to ? 'green' : 'red'}>{this.state.account === transaction.to ? 'Incoming' : 'Outgoing'}</Text></td>
                 <td>{transaction.value} ETH</td>
                 <td><Pill color={transaction.cancelled ? 'red' : transaction.complete  ? 'green' : 'primary'}>{transaction.cancelled ? 'Cancelled' : transaction.complete  ? 'Complete' : 'Pending'}</Pill></td>
                 <td>{transaction.complete ? <Button disabled value={transaction.paymentId} onClick={this.handleActionButton} size={'small'} variant={this.state.account === transaction.to ? "success" : "danger"}>{this.state.account === transaction.to ? 'Claim' : 'Cancel'}</Button> : <Button value={transaction.paymentId} onClick={this.handleActionButton} size={'small'} variant={this.state.account === transaction.to ? "success" : "danger"}>{this.state.account === transaction.to ? 'Claim' : 'Cancel'}</Button>}</td>

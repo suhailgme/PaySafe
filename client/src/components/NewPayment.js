@@ -1,14 +1,8 @@
 import React, { Component } from 'react'
 import {
-    Flex,
-    Box,
     Card,
     Button,
-    Icon,
-    Heading,
     Text,
-    Field,
-    Input,
     Form,
 } from 'rimble-ui'
 export default class NewPayment extends Component {
@@ -23,7 +17,6 @@ export default class NewPayment extends Component {
         const account = this.state.account
         const amount = this.state.amount
         const address = this.state.address
-        const balance = this.state.balance
         const web3 = this.state.web3
         const contract = this.state.contract
         const comments = this.state.comments
@@ -72,7 +65,7 @@ export default class NewPayment extends Component {
 
     render() {
         return (
-            <Card width={'500px'} mx={'auto'}>
+            <Card width={window.innerWidth < 768 ? '400px' : '500px'} mx={'auto'}>
                 <Text
                     caps
                     fontSize={1}
