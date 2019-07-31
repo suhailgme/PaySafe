@@ -8919,6 +8919,12 @@
     "version": "0.5.8+commit.23d335f2.Emscripten.clang"
   },
   "networks": {
+    "4": {
+      "events": {},
+      "links": {},
+      "address": "0xE8A50234D3ec9993aFFBD1D0a1450F16Bbf58A68",
+      "transactionHash": "0xed0a578e862a775c28d94fedb5e04b31e34e0837f3b310e3f6d6025c830e10ac"
+    },
     "5777": {
       "events": {
         "0x7ceb17f446514df98b2f8508b70e2099e7072ec0575cacd0b77c1e6be9694ce0": {
@@ -9020,8 +9026,8 @@
         }
       },
       "links": {},
-      "address": "0x5F91B8c89D195ABcdde1BB361F542A284e594a89",
-      "transactionHash": "0x28aa7c0f45d2bd34fb3e8e24f66ef5912502b01aed71674dac67cbfb753274b9"
+      "address": "0xD28Aab858C8A8895cf49E7FeEce24A0e1B13550c",
+      "transactionHash": "0xfd4ef44ce90f040e5ed3dd41553c99c4876da6021d390bdb4b8770f6b9c1b325"
     },
     "1564472986369": {
       "events": {},
@@ -9031,7 +9037,7 @@
     }
   },
   "schemaVersion": "3.0.11",
-  "updatedAt": "2019-07-30T11:28:57.613Z",
+  "updatedAt": "2019-07-31T04:09:16.358Z",
   "devdoc": {
     "methods": {
       "cancelTransaction(uint256)": {
