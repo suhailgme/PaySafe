@@ -42,10 +42,10 @@ Built with [Rimble❤️](https://github.com/ConsenSys/rimble-ui)
 * Navigate to the PaySafe folder via commmand line(e.g. Powershell or Terminal)
 * Install project dependencies by typing `npm install` in the PaySafe folder
 * In a new command line window, run `ganache-cli` and copy the mnemonic for use in Metamask
-  * alternatively, run a Ganache GUI instance
+  * alternatively, run a Ganache GUI instance (retain the mnemonic for use in Metamask)
 * In the previous command line window enter the `truffle migrate --network develop` command
   * This will compile and migrate the required contracts to the development blockchain
-  * Tests can be run by typing `truffle test`
+* Tests can be run by typing `truffle test`
 * The PaySafe contract is now compiled and ready to be interacted with
 ##### Building the front-end client (Optional)
 * ##### Optionally skip building the client and navigate to https://dreamy-hypatia-20bc93.netlify.com/ using Metamask on localhost:8545 with Ganache running to interact with the locally deployed instance of PaySafe
