@@ -61,7 +61,7 @@ export default class Payments extends Component {
     if(transaction.from === account)
       tx = await contract.methods.cancelTransaction(transactionId).send({ from: account })
     this.state.updateBalance()
-    console.log(tx)
+    // console.log(tx)
     await this.getEvents();
   }
 

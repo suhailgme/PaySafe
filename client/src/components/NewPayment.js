@@ -15,7 +15,7 @@ export default class NewPayment extends Component {
     state = { ...this.props, amountValid: false, addressValid: false, comments: "0x0" }
 
     componentDidMount = async() => {
-        console.log(this.state)
+        // console.log(this.state)
     }
 
     handleSubmit = async (e) => {
@@ -27,19 +27,19 @@ export default class NewPayment extends Component {
         const web3 = this.state.web3
         const contract = this.state.contract
         const comments = this.state.comments
-        console.log(amount, address, balance, this.state)
+        // console.log(amount, address, balance, this.state)
         if (amount && address){
             this.setState({ amountValid: true, addressValid: true })
             const tx = await contract.methods.newTransaction(address, comments).send({ from: account, value: web3.utils.toWei(amount.toString(), 'ether')});
             await this.state.updateBalance()
-            console.log(tx)
+            // console.log(tx)
         }
     }
 
     handleAmountValidation = (e) => {
         const balance = parseFloat(this.state.balance)
         const amount = parseFloat(e.target.value)
-        console.log(amount, balance)
+        // console.log(amount, balance)
         if (amount <= balance) {
             this.setState({ amount })
             e.target.parentNode.classList.add("was-validated")
@@ -51,7 +51,7 @@ export default class NewPayment extends Component {
     handleAddressValidation = (e) => {
         const address = e.target.value
         const web3 = this.state.web3
-        console.log(web3.utils.isAddress(address))
+        // console.log(web3.utils.isAddress(address))
         if (web3.utils.isAddress(address)) {
             this.setState({ address })
             e.target.parentNode.classList.add("was-validated")
