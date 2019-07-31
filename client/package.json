@@ -4,12 +4,12 @@
   "private": true,
   "dependencies": {
     "@rimble/network-indicator": "^1.2.1",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "react-scripts": "2.1.1",
     "rimble-ui": "^0.9.6",
     "styled-components": "^4.3.2",
-    "web3": "^1.0.0-beta.37"
+    "web3": "^1.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
