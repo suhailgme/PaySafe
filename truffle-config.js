@@ -1,9 +1,9 @@
 const path = require("path");
-const HDWalletProvider = require('truffle-hdwallet-provider');
-const infuraUrl = 'https://rinkeby.infura.io/v3/0c7bd415b86d4c8ea9fd81cfc5468d87';
+// const HDWalletProvider = require('truffle-hdwallet-provider');
+// const infuraUrl = 'https://rinkeby.infura.io/v3/0c7bd415b86d4c8ea9fd81cfc5468d87';
 
-const fs = require('fs');
-const mnemonic = fs.readFileSync(".secret").toString().trim();
+// const fs = require('fs');
+// const mnemonic = fs.readFileSync(".secret").toString().trim();
 
 module.exports = {
   /**
@@ -29,11 +29,11 @@ module.exports = {
      network_id: "*",       // Any network (default: none)
     },
 
-    rinkeby:{
-      provider: () => new HDWalletProvider(mnemonic, infuraUrl),
-      network_id: 4,
-      gas: 5500000,
-    }
+    // rinkeby:{
+    //   provider: () => new HDWalletProvider(mnemonic, infuraUrl),
+    //   network_id: 4,
+    //   gas: 5500000,
+    // }
 
     // Another network with more advanced options...
     // advanced: {
