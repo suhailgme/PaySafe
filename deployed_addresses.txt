@@ -1,3 +1,3 @@
 Network: Rinkeby
 Network ID: 4
-Deployed Address: 0x...
+Deployed Address: 0xE8A50234D3ec9993aFFBD1D0a1450F16Bbf58A68
