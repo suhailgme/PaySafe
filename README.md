@@ -6,10 +6,10 @@ This application implements reversible Ethereum transactions. This type of trans
 ![PaySafe Screenshot](https://github.com/suhailgme/PaySafe/blob/master/screenshots/PaySafe.PNG)
 Built with [Rimble❤️](https://github.com/ConsenSys/rimble-ui)
 ### Usage
-* Access the Dapp on Rinkeby at (https://dreamy-hypatia-20bc93.netlify.com/) 
+* #### Access the Dapp on Rinkeby at (https://dreamy-hypatia-20bc93.netlify.com/) 
 * Or [build and run it locally](#notes-to-developers)
 
-#### Create a New ETH Payment
+##### Create a New ETH Payment
 * Enter an address you wish to send funds to
 * Input the amount of Ether to send to the specified address
 * Optionally include any comments you'd like the recipient to see
