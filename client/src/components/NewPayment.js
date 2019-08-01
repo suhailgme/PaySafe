@@ -8,7 +8,7 @@ import {
 export default class NewPayment extends Component {
     state = { ...this.props, amountValid: false, addressValid: false, comments: "0x0" }
 
-    componentDidMount = async() => {
+    componentDidMount = async () => {
         // console.log(this.state)
     }
 
@@ -21,10 +21,24 @@ export default class NewPayment extends Component {
         const contract = this.state.contract
         const comments = this.state.comments
         // console.log(amount, address, balance, this.state)
-        if (amount && address){
+        if (amount && address) {
             this.setState({ amountValid: true, addressValid: true })
-            const tx = await contract.methods.newTransaction(address, comments).send({ from: account, value: web3.utils.toWei(amount.toString(), 'ether')});
-            await this.state.updateBalance()
+            window.toastProvider.addMessage("Payment submitted", {variant:'default', colorTheme:'light',secondaryMessage:"Confirm in MetaMask"})
+            try {
+                const tx = await contract.methods.newTransaction(address, comments)
+                .send({ from: account, value: web3.utils.toWei(amount.toString(), 'ether') })
+                .on ("transactionHash", hash =>{
+                    window.toastProvider.addMessage(`Processing ${amount} ETH Payment`, {variant:'processing', colorTheme:'light',})
+                })
+                .on("confirmation", confirmation =>{
+                    if(confirmation === 0)
+                        window.toastProvider.addMessage(`Successfully sent ${amount} ETH!`, {variant:'success', colorTheme:'light',})                    
+                })
+                await this.state.updateBalance()
+            }catch(e){
+                window.toastProvider.addMessage("Payment Failed", {variant:'failure', colorTheme:'light', secondaryMessage:"No ETH was sent!"})
+            }
+
             // console.log(tx)
         }
     }
@@ -36,8 +50,8 @@ export default class NewPayment extends Component {
         if (amount <= balance) {
             this.setState({ amount })
             e.target.parentNode.classList.add("was-validated")
-        }else
-            this.setState({ amount:null })
+        } else
+            this.setState({ amount: null })
 
     }
 
@@ -52,15 +66,15 @@ export default class NewPayment extends Component {
             this.setState({ address: null })
     }
 
-    handleComments = (e) =>{
+    handleComments = (e) => {
         const web3 = this.state.web3
         let comments = e.target.value
-        if(comments){
-           comments =  web3.utils.toHex(comments)
-            this.setState({comments:comments})
+        if (comments) {
+            comments = web3.utils.toHex(comments)
+            this.setState({ comments: comments })
         }
         else
-            this.setState({comments:"0x0"})
+            this.setState({ comments: "0x0" })
     }
 
     render() {
