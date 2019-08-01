@@ -8,12 +8,14 @@ import Payments from './components/Payments'
 import {
   Flex,
   Box,
+  Button,
+  ToastMessage
 } from 'rimble-ui'
 import "./App.css";
 import { async } from "q";
 
 class App extends Component {
-  state = { storageValue: 0, web3: null, accounts: null, contract: null };
+  state = { storageValue: 0, web3: null, accounts: null, contract: null, };
 
   componentDidMount = async () => {
     try {
@@ -71,7 +73,7 @@ class App extends Component {
                 updateBalance={this.updateBalance}
               />
             </Box>
-            <Box pt={4} px={4}> 
+            <Box pt={4} px={4}>
               <AccountInfo account={accounts[0]} balance={balance} />
             </Box>
           </Flex>
@@ -83,6 +85,7 @@ class App extends Component {
               updateBalance={this.updateBalance}
             />
           </Flex>
+          <ToastMessage.Provider ref={node => (window.toastProvider = node)} />
 
         </div>
       )
