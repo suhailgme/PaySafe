@@ -47,7 +47,7 @@ Built with [Rimble❤️](https://github.com/ConsenSys/rimble-ui)
   * This will compile and migrate the required contracts to the development blockchain
 * Tests can be run by typing `truffle test`
 * The PaySafe contract is now compiled and ready to be interacted with
-##### Building the front-end client (Optional)
+##### Building the Front-End Client 
 * In a command line terminal, navigate the the client directory located within the PaySafe folder
 * Run the command `npm install` to download the required dependencies
 * Once installation has completed, run the command `npm run start`
