@@ -66,7 +66,6 @@ export default class Payments extends Component {
           window.toastProvider.addMessage(`Processing ${amount} ETH Payment`, { variant: 'processing', colorTheme: 'light', })
         })
         .on("confirmation", confirmation => {
-          console.log(confirmation)
           if (confirmation === 0)
             window.toastProvider.addMessage(`Successfully received ${amount} ETH!`, { variant: 'success', colorTheme: 'light', })
         })
