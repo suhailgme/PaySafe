@@ -48,7 +48,6 @@ Built with [Rimble❤️](https://github.com/ConsenSys/rimble-ui)
 * Tests can be run by typing `truffle test`
 * The PaySafe contract is now compiled and ready to be interacted with
 ##### Building the front-end client (Optional)
-* ##### Optionally skip building the client and navigate to https://dreamy-hypatia-20bc93.netlify.com/ using Metamask on localhost:8545 with Ganache running to interact with the locally deployed instance of PaySafe
 * In a command line terminal, navigate the the client directory located within the PaySafe folder
 * Run the command `npm install` to download the required dependencies
 * Once installation has completed, run the command `npm run start`
